@@ -1,0 +1,129 @@
+unit Perlin;
+
+
+
+interface
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, ExtCtrls;
+
+procedure PPerlin();
+Procedure del();                                     
+var
+stepgrid:integer;
+sizeLX:integer;
+sizeLY:integer; //размерность ланшафта
+SizeElemGrid:integer;
+masL:array of array of real;//массив ланшафта
+T:array of integer; //справочная таблица
+implementation
+const
+tbsize=256; //размерность таблици векторов
+var
+vecmas:array[1..tbsize,1..2]of Extended; //таблица векторов
+//a1,b1:integer;
+
+procedure Ivecmas();  //процедура заполнения таблици векторов
+var i:integer;
+a,s:real;
+
+begin
+a:=0;
+s:=6.28/tbsize;
+for i:=1 to 256 do begin
+vecmas[i,1]:=(1*cos(a));
+vecmas[i,2]:=(1*sin(a));
+a:=a+s;
+end;
+
+end;
+
+function Skalyar_proizv(a,b,x,y:integer):Extended;
+var i:integer; a2,b2,x2,y2,ax,ay:real;
+begin
+i:=T[a]+T[b];
+
+a2:=a/SizeElemGrid;
+b2:=b/SizeElemGrid;
+x2:=x/SizeElemGrid;
+y2:=y/SizeElemGrid;
+
+ax:=x2-a2;
+ay:=y2-b2;
+Result:=ax*vecmas[i,1]+ay*vecmas[i,2];
+end;
+
+function Smeshivanie(w,ca,cb:real):Extended;
+begin
+Result:=ca*(w)+cb*(1-w);
+end;
+
+Function Setka(x,y:integer):Extended;
+var a,b,x1,y1,c:integer;
+u1,u2,u3,u4,w,v1,v2,v3,x2,y2:Extended;
+begin
+c:=SizeElemGrid;
+a:=0;x1:=0;y1:=0;
+
+
+while a<=sizeLX do begin
+if (a<=x)and(x<=a+c) then  begin
+x1:=x-a;
+break;
+end;
+a:=a+c;
+end;
+
+b:=0;
+
+while b<=sizeLY do begin
+if (b<=y)and(y<=b+c) then begin
+y1:=y-b;
+break;
+end;
+b:=b+c;
+end;
+x2:=x1/c;
+u1:=Skalyar_proizv(a,b,x1,y1);
+u2:=Skalyar_proizv(a+c,b,x1,y1);
+u3:=Skalyar_proizv(a,b+c,x1,y1);
+u4:=Skalyar_proizv(a+c,b+c,x1,y1);
+y2:=y1/c;
+w:=6*(sqr(x2)*sqr(x2)*x2)-15*(sqr(x2)*sqr(x2))+10*(sqr(x2)*x2);
+v1:=Smeshivanie(w,u1,u2);
+v2:=Smeshivanie(w,u3,u4);
+
+w:=6*(sqr(y2)*sqr(y2)*y2)-15*(sqr(y2)*sqr(y2))+10*(sqr(y2)*y2);
+v3:=Smeshivanie(w,v1,v2);
+Result:=abs(v3);
+end;
+
+Procedure PPerlin();
+var a,i,j:integer;
+begin
+Ivecmas;
+SetLength(masL,sizeLX,sizeLY);
+if sizeLX>sizeLY then
+a:=sizeLX
+else
+a:=sizeLY;
+SetLength(T,a+1+SizeElemGrid);
+Randomize;
+for i:= 0 to a+1+SizeElemGrid do begin
+T[i]:=random(126)+1;
+end;
+for i:=0 to  (sizeLX-1) do
+for j:=0 to  (sizeLY-1) do begin
+masL[i,j]:=(Setka(i,j));
+
+end;
+
+end;
+
+Procedure del();
+begin
+Masl:=nil;
+T:=nil;
+end;
+
+end.

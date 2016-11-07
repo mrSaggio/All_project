@@ -1,0 +1,84 @@
+unit Unit1;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, ExtCtrls;
+
+type
+  TForm1 = class(TForm)
+    PaintBox1: TPaintBox;
+    LabeledEdit1: TLabeledEdit;
+    LabeledEdit2: TLabeledEdit;
+    Button1: TButton;
+    LabeledEdit3: TLabeledEdit;
+    Label1: TLabel;
+    Label2: TLabel;
+    procedure Button1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+uses Perlin;
+
+{$R *.dfm}
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+i,j:integer;s:byte;  s1:real;
+mas:array of array of real;
+begin
+sizeLX:=StrToInt(LabeledEdit1.Text);
+sizeLY:=StrToInt(LabeledEdit2.Text);
+{SizeElemGrid:=4;
+SetLength(mas,sizeLX,sizeLY);
+PPerlin;
+for i:=0 to (sizeLX-1) do
+for j:=0 to (sizeLY-1) do  begin
+mas[i,j]:=masL[i,j];
+end;
+del;
+SizeElemGrid:=8;
+PPerlin;
+for i:=0 to (sizeLX-1) do
+for j:=0 to (sizeLY-1) do  begin
+mas[i,j]:=mas[i,j]+masL[i,j];
+end;
+del;
+SizeElemGrid:=16;
+PPerlin;
+for i:=0 to (sizeLX-1) do
+for j:=0 to (sizeLY-1) do  begin
+mas[i,j]:=mas[i,j]+masL[i,j];
+
+end;
+del;
+SizeElemGrid:=32;
+PPerlin;
+for i:=0 to (sizeLX-1) do
+for j:=0 to (sizeLY-1) do  begin
+mas[i,j]:=mas[i,j]+masL[i,j];
+
+end;
+del;}
+SizeElemGrid:=StrToInt(LabeledEdit3.Text);
+PPerlin;
+for i:=0 to (sizeLX-1) do
+for j:=0 to (sizeLY-1) do  begin
+{mas[i,j]:=  mas[i,j]+   masL[i,j];    }
+S1:=masl[i,j];
+s:=round(255*S1);
+PaintBox1.Canvas.Pixels[i,j]:=RGB(s,s,s)
+end;
+
+end;
+
+end.
